@@ -5,12 +5,12 @@ API em Go que recebe um CEP brasileiro, identifica a cidade via ViaCEP e retorna
 ## URL do Cloud Run
 
 >
-> `https://SERVICO-REGION-PROJECT.a.run.app`
+> `https://cloudrun-deploy-z5hmqckrla-uc.a.run.app`
 
 Exemplo de requisição:
 
 ```bash
-curl https://SERVICO-REGION-PROJECT.a.run.app/01310100
+curl https://cloudrun-deploy-z5hmqckrla-uc.a.run.app/01310100
 ```
 
 Resposta de sucesso (HTTP 200):

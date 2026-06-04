@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/marianamachado/cloudrun-deploy/internal/cep"
 	"github.com/marianamachado/cloudrun-deploy/internal/handler"
 	"github.com/marianamachado/cloudrun-deploy/internal/service"
@@ -12,6 +13,8 @@ import (
 )
 
 func main() {
+	_ = godotenv.Load()
+
 	apiKey := os.Getenv("WEATHER_API_KEY")
 	if apiKey == "" {
 		log.Fatal("WEATHER_API_KEY environment variable is required")
