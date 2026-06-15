@@ -37,18 +37,36 @@ func TestViaCEPClientLookupSuccess(t *testing.T) {
 }
 
 func TestViaCEPClientLookupNotFound(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(map[string]bool{"erro": true})
-	}))
-	defer server.Close()
-
-	client := &ViaCEPClient{
-		BaseURL:    server.URL,
-		HTTPClient: server.Client(),
+	tests := []struct {
+		name string
+		body map[string]any
+	}{
+		{
+			name: "erro as bool",
+			body: map[string]any{"erro": true},
+		},
+		{
+			name: "erro as string",
+			body: map[string]any{"erro": "true"},
+		},
 	}
 
-	_, err := client.Lookup(context.Background(), "99999999")
-	if err != ErrNotFound {
-		t.Fatalf("Lookup() error = %v, want %v", err, ErrNotFound)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				_ = json.NewEncoder(w).Encode(tt.body)
+			}))
+			defer server.Close()
+
+			client := &ViaCEPClient{
+				BaseURL:    server.URL,
+				HTTPClient: server.Client(),
+			}
+
+			_, err := client.Lookup(context.Background(), "99999999")
+			if err != ErrNotFound {
+				t.Fatalf("Lookup() error = %v, want %v", err, ErrNotFound)
+			}
+		})
 	}
 }

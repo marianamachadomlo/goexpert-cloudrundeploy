@@ -27,7 +27,18 @@ func NewViaCEPClient() *ViaCEPClient {
 type viaCEPResponse struct {
 	Localidade string `json:"localidade"`
 	UF         string `json:"uf"`
-	Erro       bool   `json:"erro"`
+	Erro       any    `json:"erro"`
+}
+
+func viaCEPHasError(erro any) bool {
+	switch v := erro.(type) {
+	case bool:
+		return v
+	case string:
+		return v == "true"
+	default:
+		return false
+	}
 }
 
 func (c *ViaCEPClient) Lookup(ctx context.Context, zipcode string) (*Location, error) {
@@ -53,7 +64,7 @@ func (c *ViaCEPClient) Lookup(ctx context.Context, zipcode string) (*Location, e
 		return nil, fmt.Errorf("decode viacep response: %w", err)
 	}
 
-	if payload.Erro || payload.Localidade == "" {
+	if viaCEPHasError(payload.Erro) || payload.Localidade == "" {
 		return nil, ErrNotFound
 	}
 

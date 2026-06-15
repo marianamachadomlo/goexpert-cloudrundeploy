@@ -1,4 +1,4 @@
-module github.com/marianamachadomlo/goexpert-cloudrundeploy
+module github.com/marianamachado/cloudrun-deploy
 
 go 1.26
 
